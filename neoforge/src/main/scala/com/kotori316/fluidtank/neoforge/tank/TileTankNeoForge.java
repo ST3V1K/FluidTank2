@@ -1,5 +1,6 @@
 package com.kotori316.fluidtank.neoforge.tank;
 
+import com.kotori316.fluidtank.config.PlatformConfigAccess;
 import com.kotori316.fluidtank.contents.Tank;
 import com.kotori316.fluidtank.fluids.FluidConnection;
 import com.kotori316.fluidtank.fluids.FluidLike;
@@ -27,6 +28,22 @@ public final class TileTankNeoForge extends TileTank {
     @NotNull
     private IFluidHandler fluidHandler = createHandler();
     public final VisualTank visualTank = new VisualTank();
+    private long lastUpdate = -1;
+    private boolean updateScheduled = false;
+
+    @Override
+    public void onTickLoading() {
+        super.onTickLoading();
+        if (this.updateScheduled && this.level != null && !this.level.isClientSide) {
+            long now = level.getGameTime();
+            var minDelay = PlatformConfigAccess.getInstance().getConfig().minUpdateDelay();
+            if (now - lastUpdate >= minDelay) {
+                PacketHandler.sendToClient(new FluidTankContentMessageNeoForge(this), level);
+                this.lastUpdate = now;
+                this.updateScheduled = false;
+            }
+        }
+    }
 
     @Override
     public void setConnection(FluidConnection c) {
@@ -37,9 +54,18 @@ public final class TileTankNeoForge extends TileTank {
 
     @Override
     public void setTank(Tank<FluidLike> tank) {
+        if (this.getTank().equals(tank)) return;
         super.setTank(tank);
         if (this.level != null && !this.level.isClientSide) { // In server side
+            long now = level.getGameTime();
+            var minDelay = PlatformConfigAccess.getInstance().getConfig().minUpdateDelay();
+            if (lastUpdate >= 0 && now - lastUpdate < minDelay) { // Throttle quick tank updates
+                this.updateScheduled = true;
+                return;
+            }
             PacketHandler.sendToClient(new FluidTankContentMessageNeoForge(this), level);
+            this.lastUpdate = now;
+            this.updateScheduled = false;
         } else {
             // In client side
             // If level is null, it is the instance in RenderItemTank

@@ -13,6 +13,7 @@ case class ConfigData
   renderUpperBound: Double,
   debug: Boolean,
   changeItemInCreative: Boolean,
+  minUpdateDelay: Long,
 ) {
   def createJson: JsonObject = {
     val json = new JsonObject
@@ -20,6 +21,7 @@ case class ConfigData
     json.addProperty("renderUpperBound", renderUpperBound)
     json.addProperty("debug", debug)
     json.addProperty("changeItemInCreative", changeItemInCreative)
+    json.addProperty("minUpdateDelay", minUpdateDelay)
 
     val capacities = new JsonObject
     capacityMap.foreach { case (tier, int) =>
@@ -37,6 +39,7 @@ object ConfigData {
     renderUpperBound = 1d - 0.001d,
     debug = false,
     changeItemInCreative = false,
+    minUpdateDelay = 10L
   )
 
   final val FOR_TEST: ConfigData = DEFAULT.copy(debug = true)

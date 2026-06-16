@@ -32,6 +32,7 @@ object FluidTankConfig {
         .flatMap(rangeChecker("renderUpperBound", Option(0d), Option(1d))),
       getValue[Boolean](j, "debug", _.getAsBoolean, ConfigData.DEFAULT.debug, Nil),
       getValue[Boolean](j, "changeItemInCreative", _.getAsBoolean, ConfigData.DEFAULT.changeItemInCreative, Nil),
+      getValue[Long](j, "minUpdateDelay", _.getAsLong, ConfigData.DEFAULT.minUpdateDelay, Nil)
     ).mapN(ConfigData.apply)
   }
 

@@ -23,6 +23,7 @@ public final class TileTankFabric extends TileTank {
 
     @Override
     public void setTank(Tank<FluidLike> tank) {
+        if (this.getTank().equals(tank)) return;
         super.setTank(tank);
         if (this.level != null && !this.level.isClientSide) {
             // Sync to client

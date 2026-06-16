@@ -40,6 +40,8 @@ class FluidTankConfig(builder: ModConfigSpec.Builder) {
   private final val changeItemInCreative: ModConfigSpec.BooleanValue = builder.comment("True to allow to modify items in player attracting")
     .comment(s"Default: ${ConfigData.DEFAULT.changeItemInCreative}")
     .define("changeItemInCreative", ConfigData.DEFAULT.changeItemInCreative)
+  private final val minUpdateDelay: ModConfigSpec.LongValue = builder.comment("Minimum number of ticks between tank updates")
+    .defineInRange("minUpdateDelay", ConfigData.DEFAULT.minUpdateDelay, 0L, 1000L)
 
   builder.pop()
 
@@ -49,7 +51,8 @@ class FluidTankConfig(builder: ModConfigSpec.Builder) {
       renderLowerBound = this.renderLowerBound.get(),
       renderUpperBound = this.renderUpperBound.get(),
       debug = this.debug.get(),
-      changeItemInCreative = this.changeItemInCreative.get()
+      changeItemInCreative = this.changeItemInCreative.get(),
+      minUpdateDelay = this.minUpdateDelay.get()
     )
   }
 }

@@ -38,8 +38,10 @@ class TileTank(var tier: Tier, t: BlockEntityType[? <: TileTank], p: BlockPos, s
   def getConnection: FluidConnection = this.connection
 
   def setTank(tank: Tank[FluidLike]): Unit = {
-    this.tank = tank
-    this.setChanged()
+    if (this.tank != tank) {
+      this.tank = tank
+      this.setChanged()
+    }
   }
 
   def getTank: Tank[FluidLike] = this.tank

@@ -47,7 +47,6 @@ runs {
     configureEach {
         systemProperty("neoforge.enabledGameTestNamespaces", modId)
         systemProperty("mixin.debug.export", "true")
-        modSources.add(modId, sourceSets["main"])
     }
 
     create("client") {
